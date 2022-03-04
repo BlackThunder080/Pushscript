@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
 	Compile(program, sizeof(program) / sizeof(program[0]));
 
-	return 69;
+	return 0;
 }
 
 void Compile(OP program[], int64_t program_length)
