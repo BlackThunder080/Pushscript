@@ -22,18 +22,24 @@ void Compile(OP[], int64_t);
 
 typedef enum OPERATIONS
 {
-	OP_EOF,
 	OP_PUSH,
+	
 	OP_ADD,
+	OP_MINUS,
+
+	OP_EQUAL,
+
 	OP_DUMP,
+
+	OP_EOF,
 } OPS;
 
 int main(int argc, char *argv[])
 {
 	OP program[64] = {
-		CreateOP(OP_PUSH, 34),
-		CreateOP(OP_PUSH, 35),
-		CreateOP(OP_ADD, 0),
+		CreateOP(OP_PUSH, 69),
+		CreateOP(OP_PUSH, 12),
+		CreateOP(OP_EQUAL, 0),
 		CreateOP(OP_DUMP, 0),
 		CreateOP(OP_EOF, 0),
 	};
@@ -124,6 +130,23 @@ void Compile(OP program[], int64_t program_length)
 				fprintf(out, "	add rax, rbx\n");
 				fprintf(out, "	push rax\n");
 				break;
+			case OP_MINUS:;
+				fprintf(out, "	pop rbx\n");
+				fprintf(out, "	pop rax\n");
+				fprintf(out, "	sub rax, rbx\n");
+				fprintf(out, "	push rax\n");
+				break;
+
+			case OP_EQUAL:;
+				fprintf(out, "	pop rax\n");
+				fprintf(out, "	pop rbx\n");
+				fprintf(out, "	mov rcx, 0\n");
+				fprintf(out, "	mov rdx, 1\n");
+				fprintf(out, "	cmp rax, rbx\n");
+				fprintf(out, "	cmove rcx, rdx\n");
+				fprintf(out, "	push rcx\n");
+				break;
+
 			case OP_DUMP:;
 				fprintf(out, "	pop rdi\n");
 				fprintf(out, "	call dump\n");
