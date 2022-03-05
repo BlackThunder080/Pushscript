@@ -1,6 +1,5 @@
 pushscript: pushscript.c
-	gcc pushscript.c -o push -Wall
-
+	gcc pushscript.c -o pushscript -Wall
 
 out:
 	nasm out.asm -f elf64
