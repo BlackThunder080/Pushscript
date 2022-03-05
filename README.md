@@ -1,5 +1,4 @@
 # Pushscript
-
 ## Quickstart
 ### Example
 ```
