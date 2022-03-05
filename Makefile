@@ -1,5 +1,5 @@
-push: push.c
-	gcc push.c -o push -Wall
+pushscript: pushscript.c
+	gcc pushscript.c -o push -Wall
 
 
 out:
