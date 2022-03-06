@@ -94,9 +94,11 @@ int main(int argc, char *argv[])
 	compiled ^= system("nasm out.asm -f elf64");
 	
 	if (compiled)
+		compiled ^= system("gcc stdlib.c -o test.o -c -masm=intel -fno-stack-protector");
+	if (compiled)
 		compiled ^= system("nasm stdlib.asm -f elf64");
 	if (compiled)
-		compiled ^= system("ld out.o stdlib.o");
+		compiled ^= system("ld out.o stdlib.o test.o");
 
 	system("rm out.o stdlib.o");
 
