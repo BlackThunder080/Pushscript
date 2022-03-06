@@ -94,11 +94,9 @@ int main(int argc, char *argv[])
 	compiled ^= system("nasm out.asm -f elf64");
 	
 	if (compiled)
-		compiled ^= system("gcc stdlib.c -o test.o -c -masm=intel -fno-stack-protector");
-	if (compiled)
 		compiled ^= system("nasm stdlib.asm -f elf64");
 	if (compiled)
-		compiled ^= system("ld out.o stdlib.o test.o");
+		compiled ^= system("ld out.o stdlib.o");
 
 	system("rm out.o stdlib.o");
 
@@ -316,8 +314,10 @@ void CompileFile(char in_file[])
 		else if (strcmp(tok, "mem") == 0)
 			program[ip] = CreateOP(OP_PUSH_GLOBAL, MEM);
 
-		else if (strspn(tok, "0123456789") == strlen(tok))
+		else if (strspn(tok, "-0123456789") == strlen(tok))
+		{
 			program[ip] = CreateOP(OP_PUSH, atoi(tok));
+		}
 		else if (tok[0] == '"')
 		{
 			tok++;

@@ -67,7 +67,10 @@ putd:
 
 	mov rcx, 10
 	mov rax, rdi
-	mov r8, 19
+	mov r8, 20
+
+	cmp rdi, 0
+	jl .negative
 
 	.loop:
 	    mov rdx, 0
@@ -77,11 +80,28 @@ putd:
 		dec r8
 		cmp rax, 0
 		jne .loop
+	jmp .print
 
-	mov rax, 1
-	mov rdi, 1
-	mov rdx, 20
-	syscall
+	.negative:
+		mov r9, 0
+		sub r9, rax
+		mov rax, r9
+	.negative_loop:
+	    mov rdx, 0
+		idiv rcx
+		mov rbx, [chars+rdx]
+		mov [rsi+r8], bl
+		dec r8
+		cmp rax, 0
+		jne .negative_loop
+	mov byte [rsi+r8], '-'
+
+	.print:
+		mov rax, 1
+		mov rdi, 1
+		add rsi, r8
+		mov rdx, 21
+		syscall
 
 	mov rdi, buf
 	mov rsi, 256
