@@ -172,6 +172,7 @@ void Compile(OP *program, int64_t program_length, char strings[][256], int strin
 				fprintf(out, "	push rax\n");
 				break;
 			case OP_TIMES:;
+				fprintf(out, "	mov rdx, 0\n");
 				fprintf(out, "	pop rax\n");
 				fprintf(out, "	pop rbx\n");
 				fprintf(out, "	push rax\n");
@@ -181,13 +182,14 @@ void Compile(OP *program, int64_t program_length, char strings[][256], int strin
 				fprintf(out, "	push rax\n");
 				break;
 			case OP_DIVIDE:;
+				fprintf(out, "	mov rdx, 0\n");
 				fprintf(out, "	pop rax\n");
 				fprintf(out, "	pop rbx\n");
 				fprintf(out, "	push rax\n");
 				fprintf(out, "	mov rax, rbx\n");
 				fprintf(out, "	pop rbx\n");
 				fprintf(out, "	div rbx\n");
-				fprintf(out, "	push rbx\n");
+				fprintf(out, "	push rax\n");
 				break;
 
 			case OP_EQUAL:;
@@ -239,7 +241,7 @@ void Compile(OP *program, int64_t program_length, char strings[][256], int strin
 	fprintf(out, "segment .data\n");
 	for (int i = 0; i < strings_len; i++)
 	{
-		fprintf(out, "	str_%d: db '%s', 0", i + 1, strings[i]);
+		fprintf(out, "	str_%d: db '%s', 0\n", i + 1, strings[i]);
 	}
 
 	fclose(out);
@@ -301,8 +303,10 @@ void CompileFile(char in_file[])
 		else if (StartsWith(tok, "syscall"))
 			program[ip] = CreateOP(OP_SYSCALL, atoi(tok + strlen(tok) - 1));
 		else if (StartsWith(tok, "put"))
-		{
 			program[ip] = CreateOP(OP_PUT, tok[3]);
+		else if (strcmp(tok, "newline") == 0)
+		{
+			program[ip++] = CreateOP(OP_PUSH, 10); program[ip] = CreateOP(OP_PUT, 'c');
 		}
 		else if (strcmp(tok, "dump") == 0)
 			program[ip] = CreateOP(OP_DUMP, 0);
